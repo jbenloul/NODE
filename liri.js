@@ -103,14 +103,15 @@ if (command === "my-tweets") {
 } else if (command === "do-what-it-says") {
     fs.readFile("random.txt", "utf8", function(error, data) {
         //console.log(data);
+
         var dataArray = data.split(",");
         for (var i = 0; i < dataArray.length; i += 2) {
-            command = dataArray[i].trim();
-            var textFileInput = dataArray[i + 1].trim();
+            command = dataArray[i];
+            var textFileInput = dataArray[i + 1];
             console.log(command);
             // console.log(textFileInput)
             if (command === "spotify-this-song") {
-                queryUrl = "https://api.spotify.com/v1/search?q=" + textFileInput + "&type=track";
+                queryUrl = "https://api.spotify.com/v1/search?q=" + textFileInput.trim() + "&type=track";
                 request(queryUrl, function(error, response, body) {
                     console.log("The song's Artist is: " + JSON.parse(body).tracks.items[0].album.artists[0].name);
                     console.log("Even though you searched for it specifically, we're asked to provide you the song's name, so here goes: " + JSON.parse(body).tracks.items[0].name);
@@ -118,7 +119,7 @@ if (command === "my-tweets") {
                     console.log("The song is from the Album: " + JSON.parse(body).tracks.items[0].album.name);
                 });
             } else if (command === "my-tweets") {
-                client.get('search/tweets', { q: textFileInput, result_type: "recent", count: 20 }, function(error, tweets, response) {
+                client.get('search/tweets', { q: textFileInput.trim(), result_type: "recent", count: 20 }, function(error, tweets, response) {
                     // console.log(response);
                     for (var i = 0; i < tweets.statuses.length; i++) {
                         tweets[i]
@@ -126,7 +127,7 @@ if (command === "my-tweets") {
                     }
                 })
             } else if (command === "movie-this") {
-                queryUrl = "http://www.omdbapi.com/?t=" + textFileInput + "&y=&plot=short&r=json"
+                queryUrl = "http://www.omdbapi.com/?t=" + textFileInput.trim() + "&y=&plot=short&r=json"
                 console.log(queryUrl)
                     //    * This will output the following information to your terminal/bash window:
                 request(queryUrl, function(error, response, body) {
